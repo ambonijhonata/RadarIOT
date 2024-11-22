@@ -1,0 +1,10 @@
+ESP32
+- Fazer funcionar o projeto com esp32
+- conectar esp32 a o wifi
+- instar o mosquitto
+- conectar o esp32 ao mosquito(local ou na web, se der faz na web direto pq tem que conectar o esp no wifi de qualquer jeito_
+- se registrar a um topico
+- fazer publicar a distancia em cm no tópico.
+
+Processing
+- Alterar para em vez de pegar os dados da porta COM, pegar do topico.

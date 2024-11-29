@@ -1,0 +1,47 @@
+from flask import Flask, request, render_template, jsonify
+import pygame
+import time
+import threading
+
+app = Flask(__name__)
+
+# Lista para armazenar os dados do sensor
+sensor_data = []
+
+# Inicializa o mixer do Pygame para tocar o áudio
+pygame.mixer.init()
+
+# Função para tocar o áudio por 3 segundos
+def play_audio():
+    pygame.mixer.music.load('C:/A/audio.mp3')
+    pygame.mixer.music.play()
+    time.sleep(3)  # Tocar por 3 segundos
+    pygame.mixer.music.stop()
+
+@app.route("/")
+def index():
+    return render_template("radar.html")
+
+@app.route("/sensor", methods=["POST"])
+def sensor():
+    try:
+        angle = float(request.form.get("angle"))
+        distance = float(request.form.get("distance"))
+    except (TypeError, ValueError):
+        return "Invalid data", 400
+
+    # Armazenando os dados recebidos
+    sensor_data.append({"angle": angle, "distance": distance})
+
+    # Se a distância for menor que 100, executa o áudio
+    if distance < 100:
+        threading.Thread(target=play_audio).start()  # Executar em uma thread separada
+
+    return "Data received", 200
+
+@app.route("/data", methods=["GET"])
+def data():
+    return jsonify(sensor_data)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
